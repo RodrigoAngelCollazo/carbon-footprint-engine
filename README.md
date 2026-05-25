@@ -1,56 +1,61 @@
-# Environmental Impact Assessment (EIA) Automation Sentinel
+# Enterprise Carbon Footprint Ingestion Engine
 
-[![Build Matrix Status](https://github.com/RodrigoAngelCollazo/eis-automation-sentinel/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/RodrigoAngelCollazo/eis-automation-sentinel/actions)
-[![Data Quality Integrity](https://img.shields.io/badge/Data%20Quality-100%25-success)](https://github.com/RodrigoAngelCollazo/eis-automation-sentinel)
+[![Compliance Matrix Status](https://img.shields.io/badge/Compliance-ISO%2014064%20%7C%20ISO%2014067-blue)](https://github.com/RodrigoAngelCollazo/carbon-footprint-engine)
+[![Audit Audit Trail Status](https://img.shields.io/badge/Data%20Quality-100%25-success)](https://github.com/RodrigoAngelCollazo/carbon-footprint-engine)
 
-An enterprise-grade, Test-Driven Development (TDD) data governance engine engineered to ingest, parse, and validate streaming environmental telemetry. Built under the principles of **Process-as-Code**, this sentinel serves as a strict regulatory gatekeeper—intercepting raw telemetry arrays to enforce EPA-aligned air and water quality bounds before committing them to high-throughput time-series databases.
-
----
-
-## 🏗️ System Architecture & Data Flow
-
-[ Raw Sensor Telemetry Stream ] ──► Ingestion Layer
-│
-▼
-┌────────────────────────────────────────┐
-│    sentinel/guard.py (Pydantic Gate)   │
-├────────────────────────────────────────┤
-│ 🛠️ Structural Validation                 │
-│ 🧪 Regulatory Boundary Assertions      │
-└────────────────────────────────────────┘
-│
-┌───────────────────────┴───────────────────────┐
-▼                                               ▼
-[ Within Legal Matrix ]                          [ Critical Breach Alert ]
-│                                               │
-▼                                               ▼
-┌──────────────────────────────┐                ┌──────────────────────────────┐
-│ Execute DB Transaction Block │                │  Raise Explicit ValueError   │
-│  (TimescaleDB Staging Sync)  │                │   (Drop Payload & Flag Log)  │
-└──────────────────────────────┘                └──────────────────────────────┘
-
-
-The data pipeline processes incoming arrays through an isolated validation cycle. To preserve production database integrity, validated records are temporarily written to transactional staging matrices before a highly efficient upsert merge runs against historic analytical nodes.
+A high-integrity, Test-Driven Development (TDD) data governance gateway built under a **Process-as-Code** methodology. This engine ingests, structures, and audits incoming emissions telemetry data, providing structural validation against strict international carbon standards before committing telemetry metrics to long-term storage.
 
 ---
 
-## 📊 Regulated Quality Matrices
+## 🏗️ Compliance Data Pipeline Architecture
 
-The ingestion engine uses Pydantic schema validation to strictly enforce environmental safety compliance across two focal ecosystems:
+              [ Streaming Emission Telemetry ]
+                             │
+                             ▼
+     ┌────────────────────────────────────────────────┐
+     │          sentinel/guard.py (Pydantic)          │
+     ├────────────────────────────────────────────────┤
+     │ ✔ ISO 14067: Cradle-to-Grave Product LCA Bounds│
+     │ ✔ ISO 14064: Corporate Scope 1, 2, & 3 Auditing│
+     └───────────────────────┬────────────────────────┘
+                             │
+              ┌──────────────┴──────────────┐
+              ▼                             ▼
+   [ Compliant Payload ]          [ Audit Compliance Breach ]
+              │                             │
+              ▼                             ▼
+┌─────────────────────────────┐┌─────────────────────────────┐
+│  Execute DB Upsert Merge    ││  Raise Explicit ValueError  │
+│  (TimescaleDB Staging Sync) ││  (Drop Payload & Alert Log) │
+└─────────────────────────────┘└─────────────────────────────┘
 
-### 1. Atmospheric Telemetry Boundaries
-* **$PM_{2.5}$ Particulate Matter:** Maximum permissible ceiling capped at `15.0 µg/m³`. Exceeding values immediately halt processing.
-* **$NO_2$ (Nitrogen Dioxide):** Vector bounds checked against maximum regulatory limits of `40.0 ppb` to flag air degradation spikes.
 
-### 2. Aquatic Telemetry Boundaries
-* **pH Acidity Balance:** Hard target constraints restricted to the legal safety bandwidth ($6.5 \le \text{pH} \le 8.5$).
-* **Dissolved Oxygen (DO):** Continuous floor monitoring ensuring levels stay safely above `5.0 mg/L` to track ecosystem health.
+The system separates incoming tracking models into distinct operational layers to maintain data lineage from raw ingestion right through downstream analytics nodes.
 
 ---
 
-## 📂 Production Directory Layout
+## 📊 Implemented International Standards
 
-* `sentinel/guard.py` — Core Pydantic telemetry models, structural typing rules, and custom threshold validation logic.
-* `config.json` — Decoupled configuration repository storing official EPA environmental ceiling and floor parameters.
-* `tests/` — Test-Driven Development (TDD) matrix verifying edge cases, zero-values, and critical environmental breach exceptions.
-* `pyproject.toml` — Test framework automation configuration and test coverage tracking layouts.
+The validation layer dynamically checks schemas against standardized carbon protocol matrices:
+
+### 1. ISO 14067 — Product Carbon Footprint (PCF)
+Tracks life cycle assessment data points across all standard lifecycle stages:
+* **`raw_material_kg`**: Upstream resource extraction mass footprint tracking.
+* **`production_processing_kwh`**: Utility and manufacturing power draw conversion tracking.
+* **`distribution_transport_km`**: Logistics supply chain transport distance metrics.
+* **`end_of_life_disposal_kg`**: Final decomposition processing emissions mapping.
+
+### 2. ISO 14064 — Organizational Greenhouse Gas Inventories
+Establishes corporate ecosystem tracking boundaries to log organizational impacts:
+* **Scope 1 (Direct Emissions):** Tracks site-specific stationary fuel combustion variables (`scope1_direct_combustion_liters`).
+* **Scope 2 (Indirect Emissions):** Monitors purchased energy, electricity, and local grid load draws (`scope2_indirect_electricity_kwh`).
+* **Scope 3 (Value Chain):** Captures upstream and downstream indirect supply chain metrics (`scope3_value_chain_emissions_co2e`).
+
+---
+
+## 📂 System Manifest
+
+* `sentinel/guard.py` — Immutable Pydantic baseline validation schemas for ISO mapping frameworks.
+* `config.json` — Static lookup matrix defining current IPCC greenhouse global emission coefficients.
+* `tests/` — Test suites asserting rigorous mathematical calculation bounds for structural boundary exceptions.
+* `pyproject.toml` — Automation runner configuration settings for local pipeline testing routines.
