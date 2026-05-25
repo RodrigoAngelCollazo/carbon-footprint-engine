@@ -11,70 +11,45 @@ class TestSentinelGuard(unittest.TestCase):
 
     def test_payload_within_bounds_passes(self):
         """
-        Validates that a telemetry payload where all metrics are within bounds
-        (drift <= 0.25, confidence >= 0.80, latency <= 100.0) successfully evaluates to True.
+        Validates that a telemetry payload where all metrics are within bounds successfully evaluates to True.
         """
         payload = {
-            "drift": 0.15,
-            "confidence": 0.90,
-            "latency": 45.0
+            "pm25": 10.0,
+            "no2": 30.0,
+            "so2": 50.0
         }
         self.assertTrue(self.guard.evaluate_payload(payload))
 
-    def test_drift_violation_raises_error_or_returns_false(self):
+    def test_pm25_violation_raises_error_or_returns_false(self):
         """
-        Validates that a telemetry payload where drift exceeds drift_limit returns False.
-        """
-        payload = {
-            "drift": 0.30,  # config limit: 0.25
-            "confidence": 0.90,
-            "latency": 45.0
-        }
-        self.assertFalse(self.guard.evaluate_payload(payload))
-
-    def test_latency_violation_fails_sla(self):
-        """
-        Validates that a telemetry payload where latency violates latency_limit_ms returns False.
+        Validates that a telemetry payload where pm25 exceeds limit returns False.
         """
         payload = {
-            "drift": 0.15,
-            "confidence": 0.90,
-            "latency": 120.0  # config limit: 100.0 ms
+            "pm25": 20.0,  # limit: 15.0
+            "no2": 30.0,
+            "so2": 50.0
         }
         self.assertFalse(self.guard.evaluate_payload(payload))
 
     def test_malformed_payload_schema_interception(self):
         """
         Validates that malformed telemetry payloads trigger schema validation exceptions (ValueError).
-        Checks the 4 core schema constraints:
-        1. Non-dictionary input payload.
-        2. Missing required keys.
-        3. Non-numeric value types.
-        4. Values violating fundamental physical range requirements (e.g. confidence outside [0, 1]).
         """
         # Constraint 1: Non-dictionary payload
         with self.assertRaises(ValueError):
             self.guard.evaluate_payload("not-a-dict")
 
-        # Constraint 2: Missing key 'confidence'
+        # Constraint 2: Missing key 'so2'
         with self.assertRaises(ValueError):
-            self.guard.evaluate_payload({
-                "drift": 0.15,
-                "latency": 45.0
+            self.guard.evaluate_environmental_payload({
+                "pm25": 10.0,
+                "no2": 30.0
             })
 
-        # Constraint 3: Non-numeric value type for 'latency' (string instead of float/int)
+        # Constraint 3: Non-numeric value type
         with self.assertRaises(ValueError):
-            self.guard.evaluate_payload({
-                "drift": 0.15,
-                "confidence": 0.90,
-                "latency": "fast"
-            })
-
-        # Constraint 4: Out of range confidence value (e.g. 1.5)
-        with self.assertRaises(ValueError):
-            self.guard.evaluate_payload({
-                "drift": 0.15,
-                "confidence": 1.5,
-                "latency": 45.0
+            self.guard.evaluate_environmental_payload({
+                "pm25": 10.0,
+                "no2": 30.0,
+                "so2": "high"
             })

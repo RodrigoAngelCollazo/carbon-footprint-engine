@@ -1,7 +1,13 @@
 {
-  "drift_limit": 0.25,
-  "confidence_threshold": 0.80,
-  "latency_limit_ms": 100.0,
-  "min_tps_threshold": 15.0,
-  "max_context_ratio": 0.90
+  "air_quality": {
+    "pm25_limit": 15.0,
+    "no2_limit": 40.0,
+    "so2_limit": 75.0
+  },
+  "water_quality": {
+    "ph_low": 6.5,
+    "ph_high": 8.5,
+    "do_floor": 5.0,
+    "turbidity_limit": 50.0
+  }
 }
